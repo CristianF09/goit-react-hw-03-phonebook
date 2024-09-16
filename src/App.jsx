@@ -6,23 +6,18 @@ import Filter from './components/Filter';
 import styles from './App.module.css';
 
 const App = () => {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(() => {
+    const storedContacts = localStorage.getItem('contacts');
+    return storedContacts ? JSON.parse(storedContacts) : [];
+  });
   const [filter, setFilter] = useState('');
 
-  
-  useEffect(() => {
-    const storedContacts = localStorage.getItem('contacts');
-    if (storedContacts) {
-      setContacts(JSON.parse(storedContacts));
-    }
-  }, []);
 
-  
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
-  const addContact = (newContact) => {
+  const handleAddContact = (newContact) => {
     const isDuplicate = contacts.some(
       contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
     );
@@ -35,7 +30,7 @@ const App = () => {
     setContacts(prevContacts => [...prevContacts, newContact]);
   };
 
-  const deleteContact = (contactId) => {
+  const handleDeleteContact = (contactId) => {
     setContacts(prevContacts =>
       prevContacts.filter(contact => contact.id !== contactId)
     );
@@ -58,11 +53,12 @@ const App = () => {
     <div className={styles.container}>
       <h1>Phonebook</h1>
       {}
-      <ContactForm addContact={addContact} />  
+      <ContactForm onAddContact={handleAddContact} />
 
       <h2>Contacts</h2>
       <Filter value={filter} onChange={handleFilterChange} />
-      <ContactList contacts={filteredContacts} onDelete={deleteContact} />
+      {}
+      <ContactList contacts={filteredContacts} onDelete={handleDeleteContact} />
     </div>
   );
 };

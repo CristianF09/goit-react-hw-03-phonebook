@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './ContactForm.module.css';
 
-const ContactForm = ({ addContact }) => {  
+const ContactForm = ({ onAddContact }) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
@@ -10,13 +10,15 @@ const ContactForm = ({ addContact }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (name && number) {
       const newContact = {
         name,
         number,
         id: window.nanoid() 
       };
-      addContact(newContact);  
+
+      onAddContact(newContact); 
       setName(''); 
       setNumber('');
     }
@@ -43,7 +45,7 @@ const ContactForm = ({ addContact }) => {
           name="number"
           value={number}
           onChange={handleNumberChange}
-          pattern="^\+?\d{1,4}?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$"
+          pattern="^\+?\d{1,4}?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$"
           title="Phone number must be digits and can contain spaces, dashes, parentheses, and can start with +"
           required
         />
